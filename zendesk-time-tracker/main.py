@@ -26,6 +26,14 @@ def print_console(x):
 TT = TrackedTime()
 
 
+class ZenTracker:
+    def __enter__(self):
+        ...
+
+    def __exit__(self):
+        """Any closing actions should be taken here. """
+
+
 def start_tracking():
     eel.init('app')  # Give folder containing app files
 
