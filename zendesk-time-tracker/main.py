@@ -2,7 +2,13 @@ import platform
 import sys
 import eel
 
-eel.init('app')  # Give folder containing app files
+
+class TrackedTime:
+    def __init__(self):
+        self.timer = dict()
+
+    def add_node(self, name):
+        self.timer[name] = None
 
 
 @eel.expose
@@ -12,10 +18,17 @@ def py_random():
 
 @eel.expose  # Expose this function to Javascript
 def print_console(x):
+    TT.add_node(name=x)
+    print(TT.timer)
     return f'Hello from {x}'
 
 
-def start_eel():
+TT = TrackedTime()
+
+
+def start_tracking():
+    eel.init('app')  # Give folder containing app files
+
     page = 'templates/hello.html'
     eel_kwargs = dict(
         host='localhost',
@@ -35,4 +48,4 @@ def start_eel():
 
 
 if __name__ == '__main__':
-    start_eel()
+    start_tracking()

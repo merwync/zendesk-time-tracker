@@ -7,9 +7,10 @@
         <script type='text/javascript' src='/eel.js'></script>
         <script type="text/javascript">
         async function print_console(value, object) {
-            let random_filename = await eel.print_console(value)();
-            console.log(random_filename);
+            let text = await eel.print_console(value)();
+            console.log(text);
         }
+
         </script>
     </head>
     <body>
