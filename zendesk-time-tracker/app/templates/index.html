@@ -7,11 +7,16 @@
         <script type='text/javascript' src='/eel.js'></script>
         <script type="text/javascript">
         async function print_console(value, object) {
-            let text = await eel.print_console(value)();
+            let text = await eel.print_console_py(value)();
+            console.log(text);
+        }
+        async function get_latest_objects(value, object) {
+            let text = await eel.get_(value)();
             console.log(text);
         }
 
         </script>
+        <script> print_console('helloooo') </script>
     </head>
     <body>
         <h1>Zendesk Time Tracker</h1>

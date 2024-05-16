@@ -1,6 +1,8 @@
 import platform
 import sys
 import eel
+from time import strftime, localtime
+from datetime import datetime
 
 
 class TrackedTime:
@@ -10,6 +12,13 @@ class TrackedTime:
     def add_node(self, name):
         self.timer[name] = None
 
+    def start_timer(self, node):
+        now = datetime.now()
+
+
+def pprint_time(time: datetime.time):
+    return time.strftime('%Y-%m-%d %H:%M:%S')
+
 
 @eel.expose
 def py_random():
@@ -17,10 +26,15 @@ def py_random():
 
 
 @eel.expose  # Expose this function to Javascript
-def print_console(x):
+def print_console_py(x):
     TT.add_node(name=x)
     print(TT.timer)
     return f'Hello from {x}'
+
+
+@eel.expose
+def get_latest_objects():
+    return
 
 
 TT = TrackedTime()
