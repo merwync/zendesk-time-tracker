@@ -1,6 +1,10 @@
+#### In Development
 # Zendesk Time Tracker
 
 A way to track time spent on effort around zendesk objects.
+
+Uses Eel and Jinja2 to create a simple and easy to use. 
+
 
 ## Features
 
