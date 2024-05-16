@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Zendesk Time Tracker</title>
+        <link rel="stylesheet" type="text/css" href="../css/styles.css">
+        <script type='text/javascript' src='/eel.js'></script>
+        <script type="text/javascript">
+        async function print_console(value, object) {
+            let random_filename = await eel.print_console(value)();
+            console.log(random_filename);
+        }
+        </script>
+    </head>
+    <body>
+        <h1>Zendesk Time Tracker</h1>
+       {% block content %}{% endblock %}
+    </body>
+</html>

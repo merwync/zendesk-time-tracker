@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+{% block content %}
+    <div class="button-container">
+        {% for item in range(3) %}
+            <button class="my-button" onclick="print_console('{{ item }}')">{{ item }}</button>
+        {% else %}
+            no organizations currently assigned
+        {% endfor %}
+    </div>
+{% endblock %}

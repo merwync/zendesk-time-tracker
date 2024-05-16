@@ -1,0 +1,22 @@
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.my-button {
+    width: 20%;
+    height: 50px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.my-button:hover {
+    background-color: #ddd;
+}
+
+.my-button:active {
+    background-color: red;
+    color: white;
+}
