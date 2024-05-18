@@ -1,8 +1,11 @@
 import platform
+import random
 import sys
 import eel
 from time import strftime, localtime
 from datetime import datetime
+
+""" Think Composition """
 
 
 class TrackedTime:
@@ -20,24 +23,55 @@ def pprint_time(time: datetime.time):
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
 
-@eel.expose
 def py_random():
-    return 5
+    return random.randint(2, 7)
 
 
-@eel.expose  # Expose this function to Javascript
-def print_console_py(x):
-    TT.add_node(name=x)
-    print(TT.timer)
-    return f'Hello from {x}'
+@eel.expose
+def add_object(name: str) -> None:
+    """
+    Add an object to those that are going to be rendered as buttons.
+
+    :param name:
+    :return:
+    """
+    ...
+
+
+@eel.expose
+def get_buttons(sub: int = None) -> str:
+    """
+    Returns HTML for what buttons are going to be built.
+    :param sub:
+    :return:
+    """
+    timed_objects = [
+        "slayer",
+        "metallica",
+        "pantera",
+        "megadeth",
+        "motörhead",
+    ]
+    if sub:
+        timed_objects = timed_objects[sub:]
+    return build_buttons(data={name: py_random() for name in timed_objects})
+
+
+def build_buttons(data: dict) -> str:
+    """
+    Returns HTML. Consider using Jinja here.
+    :param data:
+    :return:
+    """
+    buttons = []
+    for name, value in data.items():
+        buttons.append(f"""<button class="my-button" onclick="select_button('{name}')">{name}</button>""")
+    return '\n'.join(buttons)
 
 
 @eel.expose
 def get_latest_objects():
     return
-
-
-TT = TrackedTime()
 
 
 class ZenTracker:
@@ -51,12 +85,11 @@ class ZenTracker:
 def start_tracking():
     eel.init('app')  # Give folder containing app files
 
-    page = 'templates/hello.html'
+    page = 'index.html'
     eel_kwargs = dict(
         host='localhost',
         port=8080,
         size=(400, 300),
-        jinja_templates='templates'
     )
 
     try:
