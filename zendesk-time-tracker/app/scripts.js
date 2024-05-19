@@ -18,3 +18,17 @@ function update_buttons(buttons, object) {
     console.log(buttons);
     document.querySelector(".button-container").innerHTML = buttons;
 }
+
+async function do_login() {
+    window.location.href="https://mkc-labs.zendesk.com/auth/v2/login/signin?redirect=https%3A%2F%2Fyahoo.com";
+
+}
+
+function listCookies() {
+    var theCookies = document.cookie.split(';');
+    var aString = '';
+    for (var i = 1 ; i <= theCookies.length; i++) {
+        aString += i + ' ' + theCookies[i-1] + "\n";
+    }
+    return aString;
+}

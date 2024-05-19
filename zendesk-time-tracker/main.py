@@ -1,9 +1,13 @@
 import platform
 import random
 import sys
+
+import bottle
 import eel
-from time import strftime, localtime
+from time import strftime, localtime, sleep
 from datetime import datetime
+from bottle import route
+
 
 """ Think Composition """
 
@@ -23,11 +27,13 @@ def pprint_time(time: datetime.time):
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
 
-def py_random():
-    return random.randint(2, 7)
-
-
 @eel.expose
+def py_random():
+    amount = random.randint(2, 7)
+    print(amount)
+    return amount
+
+
 def add_object(name: str) -> None:
     """
     Add an object to those that are going to be rendered as buttons.
@@ -83,6 +89,11 @@ class ZenTracker:
         """Any closing actions should be taken here. """
 
 
+@eel.expose
+def new_window(target: str):
+    eel.show(f"html/{target}")
+
+
 def start_tracking():
     eel.init('app')  # Give folder containing app files
 
@@ -91,6 +102,7 @@ def start_tracking():
         host='localhost',
         port=8080,
         size=(400, 300),
+        block=False
     )
 
     try:
@@ -105,3 +117,9 @@ def start_tracking():
 
 if __name__ == '__main__':
     start_tracking()
+
+    # Need to login and hold the active session.
+    while True:
+        sleep(1)
+        print(bottle.HeaderDict().__dict__)
+
