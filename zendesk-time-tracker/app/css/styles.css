@@ -16,7 +16,21 @@
     background-color: #ddd;
 }
 
-.my-button:active {
-    background-color: red;
+.my-button.active {
+    background-color: #B44;
     color: white;
 }
+
+
+
+
+
+#stopwatch {
+  text-align: center;
+  font-size: 2em;
+}
+
+button {
+  margin: 5px;
+}
+

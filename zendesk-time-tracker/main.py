@@ -39,11 +39,12 @@ def add_object(name: str) -> None:
 
 
 @eel.expose
-def get_buttons(sub: int = None) -> str:
+def get_buttons(sub: int = None) -> None:
     """
     Returns HTML for what buttons are going to be built.
-    :param sub:
-    :return:
+
+    :param sub: A number of optiosn to remove. It's just testing.
+    :return: Does not return, instead calls a JS function.
     """
     timed_objects = [
         "slayer",
@@ -54,7 +55,7 @@ def get_buttons(sub: int = None) -> str:
     ]
     if sub:
         timed_objects = timed_objects[sub:]
-    return build_buttons(data={name: py_random() for name in timed_objects})
+    eel.update_buttons(build_buttons(data={name: py_random() for name in timed_objects}))
 
 
 def build_buttons(data: dict) -> str:
@@ -65,7 +66,7 @@ def build_buttons(data: dict) -> str:
     """
     buttons = []
     for name, value in data.items():
-        buttons.append(f"""<button class="my-button" onclick="select_button('{name}')">{name}</button>""")
+        buttons.append(f"""<button class="my-button" id={name} onclick="select_button('{name}')">{name}</button>""")
     return '\n'.join(buttons)
 
 
