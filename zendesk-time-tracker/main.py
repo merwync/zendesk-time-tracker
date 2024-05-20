@@ -2,12 +2,10 @@ import platform
 import random
 import sys
 
-import bottle
 import eel
 from time import strftime, localtime, sleep
 from datetime import datetime
-from bottle import route
-
+from login import login
 
 """ Think Composition """
 
@@ -23,6 +21,17 @@ class TrackedTime:
         now = datetime.now()
 
 
+@eel.expose
+def get_organizations(tenant, username, password):
+    ...
+
+
+@eel.expose
+def python_print(data):
+    print(data)
+    return 'ok'
+
+
 def pprint_time(time: datetime.time):
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -30,7 +39,7 @@ def pprint_time(time: datetime.time):
 @eel.expose
 def py_random():
     amount = random.randint(2, 7)
-    print(amount)
+    print(f"random number {amount=}")
     return amount
 
 
@@ -55,13 +64,15 @@ def get_buttons(sub: int = None) -> None:
     timed_objects = [
         "slayer",
         "metallica",
-        "pantera",
-        "megadeth",
         "motörhead",
     ]
-    if sub:
-        timed_objects = timed_objects[sub:]
-    eel.update_buttons(build_buttons(data={name: py_random() for name in timed_objects}))
+    buttons = build_buttons(data={name: py_random() for name in timed_objects})
+    print(buttons)
+    eel.update_buttons(buttons)
+
+    print("updates done")
+
+    eel.addEventListeners(timed_objects)
 
 
 def build_buttons(data: dict) -> str:
@@ -71,8 +82,14 @@ def build_buttons(data: dict) -> str:
     :return:
     """
     buttons = []
-    for name, value in data.items():
-        buttons.append(f"""<button class="my-button" id={name} onclick="select_button('{name}')">{name}</button>""")
+    for i, (name, value) in enumerate(data.items()):
+        buttons.append(
+            f"""<div class="timer">
+                    <button class="timed-object" id="{name}" onclick="select_button('{name}')">{name}</button>
+                    <div class="stopwatch" id="timer-{name}">
+                        <span id="hours-{name}">00</span>:<span id="minutes-{name}">00</span>:<span id="seconds-{name}">00</span>
+                    </div>
+                </div>""")
     return '\n'.join(buttons)
 
 
@@ -91,7 +108,11 @@ class ZenTracker:
 
 @eel.expose
 def new_window(target: str):
-    eel.show(f"html/{target}")
+    print('opening the show')
+
+    x = eel.show(f"html/{target}")
+    print('opened the show')
+    print(x)
 
 
 def start_tracking():
@@ -101,8 +122,7 @@ def start_tracking():
     eel_kwargs = dict(
         host='localhost',
         port=8080,
-        size=(400, 300),
-        block=False
+        size=(900, 600),
     )
 
     try:
@@ -116,10 +136,5 @@ def start_tracking():
 
 
 if __name__ == '__main__':
+    # Need to log in and hold the active session.
     start_tracking()
-
-    # Need to login and hold the active session.
-    while True:
-        sleep(1)
-        print(bottle.HeaderDict().__dict__)
-

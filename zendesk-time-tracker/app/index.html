@@ -6,9 +6,6 @@
         <link rel="stylesheet" type="text/css" href="../css/styles.css">
         <script type='text/javascript' src='/eel.js'></script>
         <script type='text/javascript' src='scripts.js'></script>
-        <script type="text/javascript"> get_buttons() </script>
-        <script type="text/javascript"> do_login() </script>
-        <script type="text/javascript"> console.log(listCookies()) </script>
     </head>
     <body>
         <div class="nav-header">
@@ -19,16 +16,11 @@
         <div>
             <h4>Choose a band to track time listened to. </h4>
         </div>
-        <div class="button-container">
-            Loading...
+        <div class="timer-container">
+            <div class="button-container">
+                Loading...
+            </div>
         </div>
-
-        <script type='text/javascript' src='stopwatch.js'></script>
-        <div id="stopwatch">
-          <span id="minutes">00</span>:<span id="seconds">00</span>:<span id="milliseconds">00</span>
-          <button id="start">Start</button>
-          <button id="stop">Stop</button>
-          <button id="reset">Reset</button>
-        </div>
+        <button onclick="login()">Refresh Zendesk</button>
     </body>
 </html>
