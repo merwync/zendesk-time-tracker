@@ -150,7 +150,6 @@ def start_tracking():
         size=(900, 600),
         close_callback=window_exit
     )
-    add_manual_entry(name="asdasd")
 
     try:
         eel.start(page, **eel_kwargs)  # Start
