@@ -1,6 +1,7 @@
 import platform
 import random
 import sys
+import json
 
 import eel
 from time import strftime, localtime, sleep
@@ -43,16 +44,6 @@ def py_random():
     return amount
 
 
-def add_object(name: str) -> None:
-    """
-    Add an object to those that are going to be rendered as buttons.
-
-    :param name:
-    :return:
-    """
-    ...
-
-
 @eel.expose
 def get_buttons(sub: int = None) -> None:
     """
@@ -65,7 +56,10 @@ def get_buttons(sub: int = None) -> None:
         "slayer",
         "metallica",
         "motörhead",
+        "iron-maiden-(super)",
     ]
+    timed_objects.extend(get_manual())
+    print(timed_objects)
     buttons = build_buttons(data={name: py_random() for name in timed_objects})
     print(buttons)
     eel.update_buttons(buttons)
@@ -115,6 +109,37 @@ def new_window(target: str):
     print(x)
 
 
+@eel.expose
+def add_manual_entry(name: str, object_type: str = "organization", local_file: str = "local/manual_entries.json"):
+    with open(local_file, 'r') as open_file:
+        data = json.loads(open_file.read())
+
+    data[object_type].append(name)
+
+    # deduplicate
+    data[object_type] = sorted(list(set(data[object_type])))
+
+    with open(local_file, 'w') as open_file:
+        open_file.write(json.dumps(data, indent=2))
+
+    get_buttons()
+
+
+def get_manual(object_type: str = "organization", local_file: str = "local/manual_entries.json") -> str:
+    with open(local_file, 'r') as open_file:
+        data = json.loads(open_file.read())
+    return data[object_type]
+
+
+def window_exit(*args):
+    """
+    Effectively turning all of this into a context manager.
+    :return:
+    """
+    print(f"At close -> {args=}")
+    print('Closed all windows, saved all running clocks. ')
+
+
 def start_tracking():
     eel.init('app')  # Give folder containing app files
 
@@ -123,7 +148,9 @@ def start_tracking():
         host='localhost',
         port=8080,
         size=(900, 600),
+        close_callback=window_exit
     )
+    add_manual_entry(name="asdasd")
 
     try:
         eel.start(page, **eel_kwargs)  # Start

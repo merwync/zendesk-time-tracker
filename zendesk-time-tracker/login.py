@@ -34,5 +34,4 @@ def login(zd_tenant, username, password):
 if __name__ == '__main__':
     _tenant = "mkc-labs"
 
-
     login(_tenant, _username, _password)

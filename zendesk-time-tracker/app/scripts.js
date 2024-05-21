@@ -97,4 +97,17 @@ function login() {
     }, 1000);
 }
 
+function open_menu() {
+    menu = document.getElementById("nav")
+    menu.classList.toggle('open');
+}
+
 get_buttons();
+
+
+
+function add_manual_entry() {
+    var entry = document.querySelector("#new-manual-entry").value;
+    console.log("Adding new manual value: " + entry);
+    eel.add_manual_entry(entry)();
+}

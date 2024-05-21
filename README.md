@@ -39,3 +39,11 @@ Uses Eel and Jinja2 to create a simple and easy to use.
 2. Config File
     1. URL of Zendesk tenant
     2. Object to track (X)
+
+
+
+
+### Menu Options
+* View Today's Times > New View
+* Add a manual entry. > New View
+* Configuration > New View
