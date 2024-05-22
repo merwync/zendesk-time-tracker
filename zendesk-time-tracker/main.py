@@ -2,13 +2,90 @@ import platform
 import random
 import sys
 import json
-
+from enum import Enum
 import eel
-from time import strftime, localtime, sleep
+from time import strftime, localtime, sleep, time
 from datetime import datetime
 from login import login
 
 """ Think Composition """
+
+LOCAL_FILEDIR = "./local"
+
+
+class State(Enum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+
+
+def read_history(history_date: str, obj_type: str = "organization"):
+    """
+
+    :param history_date: In the format of 05-21-24
+    :param obj_type:
+    :return:
+    """
+    data = read_json(filename="history.json")[obj_type]
+    return data[history_date]
+
+
+def set_date(epoch):
+    ...
+
+
+def pull_date(epoch):
+    ...
+
+
+def write_json(filename: str, data: dict):
+    with open(f"{LOCAL_FILEDIR}/{filename}", 'w') as open_file:
+        open_file.write(json.dumps(data, indent=2))
+
+
+def read_json(filename):
+    with open(f"{LOCAL_FILEDIR}/{filename}", 'r') as open_file:
+        data = json.loads(open_file.read())
+    return data
+
+
+def set_state(name: str, object_type: str = "organization"):
+    """State should be set here"""
+    state_file = "states.json"
+    data = read_json(filename=state_file)
+    state = data[object_type].get(name)
+    print(f"{name}: {state}")
+
+
+@eel.expose
+def start_timer(name: str, objet_type: str = "organization"):
+    """
+
+    :param name:
+    :param objet_type:
+    :return:
+    """
+    save_result(watch_time=int(time()), name=name)
+    ...
+
+
+@eel.expose
+def stop_timer(name: str, objet_type: str = "organization"):
+    save_result(watch_time=int(time()), name=name)
+    ...
+
+
+def save_result(watch_time: int, name: str, object_type: str = "organization"):
+    print(f'stopping time for {name}: {watch_time}')
+
+
+@eel.expose
+def get_active(object_type: str = "organization"):
+    """
+    Get the list of active items.
+
+    :return:
+    """
+    return [name for name, state in read_json(filename="states.json")[object_type].items() if state == "active"]
 
 
 class TrackedTime:
@@ -59,15 +136,16 @@ def get_buttons(sub: int = None) -> None:
         "iron-maiden-(super)",
     ]
     timed_objects.extend(get_manual())
+
+    active = get_active()
+
+    state_objects = {name: "active" if name in active else "" for name in timed_objects}
+
     print(timed_objects)
-    buttons = build_buttons(data={name: py_random() for name in timed_objects})
-    print(buttons)
+    buttons = build_buttons(data={name: state for name, state in state_objects.items()})
     eel.update_buttons(buttons)
-
-    print("updates done")
-
     eel.addEventListeners(timed_objects)
-
+    eel.set_active_js()
 
 def build_buttons(data: dict) -> str:
     """
@@ -76,13 +154,14 @@ def build_buttons(data: dict) -> str:
     :return:
     """
     buttons = []
-    for i, (name, value) in enumerate(data.items()):
+    for name, state in data.items():
         buttons.append(
             f"""<div class="timer">
                     <button class="timed-object" id="{name}" onclick="select_button('{name}')">{name}</button>
                     <div class="stopwatch" id="timer-{name}">
                         <span id="hours-{name}">00</span>:<span id="minutes-{name}">00</span>:<span id="seconds-{name}">00</span>
                     </div>
+                    <div id="history">HISTORY</div>
                 </div>""")
     return '\n'.join(buttons)
 
@@ -161,6 +240,22 @@ def start_tracking():
             raise
 
 
-if __name__ == '__main__':
-    # Need to log in and hold the active session.
+def check_running():
+    """There's a better way to do this..."""
+    try:
+        assert not read_json(filename=".lock")['locked']
+    except AssertionError as e:
+        raise AssertionError('An instance of this application is already running.')
+
+    write_json(filename=".lock", data={"locked": True})
+
+
+def main():
+    history = read_history(history_date="05-21-24")
+    print(history)
     start_tracking()
+
+
+if __name__ == '__main__':
+    main()
+    # Need to log in and hold the active session.

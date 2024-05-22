@@ -6,39 +6,56 @@ async function get_buttons(value, object) {
 var startTimes = {};  // Store start times for each band
 var timers = {};  // Move the timers variable inside the function
 
+
+async function activate_timer(value, startTime, object) {
+    eel.start_timer(value)
+
+    console.log("starting timer!")
+    startTimes[value] = Date.now();
+    timers[value] = setInterval(function() {
+        // Update timer for this band
+        var elapsedTime = Date.now() - startTimes[value];
+
+        var hours = Math.floor(elapsedTime / 3600000);
+        var minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        var seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+        document.getElementById('hours-' + value).textContent = padZero(hours);
+        document.getElementById('minutes-' + value).textContent = padZero(minutes);
+        document.getElementById('seconds-' + value).textContent = padZero(seconds);
+    }, 1000);
+
+}
+
+eel.expose(select_button);
 async function select_button(value, object) {
     console.log("Button selected: " + value);
     var button = document.getElementById(value);
     button.classList.toggle('active');
 
-
     if (button.classList.contains('active')) {
         // Start timer
-        console.log("starting timer!")
-        startTimes[value] = Date.now();
-        timers[value] = setInterval(function() {
-            // Update timer for this band
-            var elapsedTime = Date.now() - startTimes[value];
-
-            var hours = Math.floor(elapsedTime / 3600000);
-            var minutes = Math.floor((elapsedTime % 3600000) / 60000);
-            var seconds = Math.floor((elapsedTime % 60000) / 1000);
-
-            document.getElementById('hours-' + value).textContent = padZero(hours);
-            document.getElementById('minutes-' + value).textContent = padZero(minutes);
-            document.getElementById('seconds-' + value).textContent = padZero(seconds);
-        }, 1000);
+        activate_timer(value)
         console.log(timers);
-
     } else {
-        console.log("stopping!!");
-
         // Stop timer
+        console.log("stopping!!");
         clearInterval(timers[value]);
         console.log(timers)
+        eel.stop_timer(value)
+
     }
 }
 
+eel.expose(set_active_js)
+async function set_active_js() {
+    var values = await eel.get_active()();
+    console.info(values);
+    values.forEach((active) => {
+        console.info(active);
+        select_button(active);
+    });
+}
 
 function padZero(number) {
     return number.toString().padStart(2, '0');
@@ -102,12 +119,14 @@ function open_menu() {
     menu.classList.toggle('open');
 }
 
-get_buttons();
-
-
 
 function add_manual_entry() {
     var entry = document.querySelector("#new-manual-entry").value;
     console.log("Adding new manual value: " + entry);
     eel.add_manual_entry(entry)();
+    set_active_js();
 }
+
+
+get_buttons();
+set_active_js();
