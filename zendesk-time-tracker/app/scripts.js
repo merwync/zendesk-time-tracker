@@ -102,9 +102,23 @@ async function check_headers() {
       }
 }
 
+function get_json_results() {
+    const url = "https://d3v-mkc-labs.zendesk.com/api/v2/views/hydrate.json?filter%5Bids%5D=2%2C1&include=last_comment";
+    window.open(url, '_blank');
+    fetch(url)
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+
+}
+
 function login() {
+
+  const url = "https://d3v-mkc-labs.zendesk.com/auth/v2/login/signin?return_to=https%3A%2F%2Fd3v-mkc-labs.zendesk.com%2F";
+  window.open(url, '_blank');
+
+
   // If logged in, return the inner HTML that "Fields Last retrieval: ### time"
-    eel.new_window('login.html');
+    //eel.new_window('login.html');
 
     // Run check_headers() every second
     setInterval(async () => {

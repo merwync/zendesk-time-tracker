@@ -39,5 +39,4 @@ if __name__ == "__main__":
     time_now = int(time.time())
     sample_time = 1716429843
 
-    start_time(name="metallica", exec_time=sample_time)
-    start_time(name="metallica", exec_time=time_now)
+    start_time(name="another", exec_time=sample_time)

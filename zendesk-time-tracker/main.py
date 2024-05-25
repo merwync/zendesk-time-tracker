@@ -251,7 +251,7 @@ def check_running():
 
 
 def main():
-    history = read_history(history_date="05-21-24")
+    history = read_history(history_date="2024-05-23")
     print(history)
     start_tracking()
 
